@@ -16,4 +16,7 @@ export const ERROR_CODE: Record<string, ErrorDetail> = {
 
   /** 사용자 조회 */
   USER_NOT_FOUND: { name: 'USER00004', message: '사용자를 찾을 수 없습니다.' },
+
+  /** 사용자 수정 */
+  USER_UPDATE_FAILED: { name: 'USER00005', message: '사용자 수정 실패' },
 };
