@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
 
 import { AppModule } from './app.module';
-import { CustomLogger } from './common/Logger/custom-logger';
+import { CustomLogger } from './common/logger/custom-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
