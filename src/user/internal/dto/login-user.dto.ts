@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginUserReq {
@@ -13,7 +14,9 @@ export class LoginUserReq {
   password: string;
 }
 
+@Exclude()
 export class LoginUserRes {
+  @Expose()
   @ApiProperty({ description: '액세스 토큰', example: 'access_token' })
   accessToken: string;
 }
