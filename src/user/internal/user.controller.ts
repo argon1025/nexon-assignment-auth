@@ -1,21 +1,25 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
 import { CreateUserReq, CreateUserRes } from './dto/create-user.dto';
+import { GetUserByIdRes } from './dto/get-user-by-id.dto';
 import { LoginUserReq, LoginUserRes } from './dto/login-user.dto';
 import { InternalUserService } from './user.service';
 import { ErrorResponse } from '../../common/dto/error-response.dto';
 
 @Controller('auth/internal/user')
-@ApiTags('사용자')
+@ApiTags('[내부 API] 사용자')
 export class InternalUserController {
   constructor(private readonly internalUserService: InternalUserService) {}
 
@@ -35,5 +39,14 @@ export class InternalUserController {
   @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
   async login(@Body() loginUserReq: LoginUserReq): Promise<LoginUserRes> {
     return plainToInstance(LoginUserRes, await this.internalUserService.login(loginUserReq));
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '사용자 정보 조회' })
+  @ApiParam({ name: 'id', description: '사용자 아이디', example: '68275fede4fdf52e54db13de' })
+  @ApiNotFoundResponse({ description: '사용자를 찾을 수 없습니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  async findById(@Param('id') id: string): Promise<GetUserByIdRes> {
+    return plainToInstance(GetUserByIdRes, await this.internalUserService.findById(id));
   }
 }
