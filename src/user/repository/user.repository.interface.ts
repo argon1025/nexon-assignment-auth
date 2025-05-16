@@ -9,8 +9,8 @@ export interface IUserRepository {
 
   /**
    * 사용자 생성
-   * @throws {ConflictException} 이미 사용중인 이메일
-   * @throws {InternalServerErrorException} 사용자 생성 실패
+   * @throws {ConflictException} [USER00001] 이미 사용중인 이메일
+   * @throws {InternalServerErrorException} [USER00002] 사용자 생성 실패
    */
   create(user: CreateUserOptions): Promise<CreateUserResult>;
 }

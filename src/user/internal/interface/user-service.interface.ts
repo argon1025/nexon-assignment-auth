@@ -1,8 +1,15 @@
 export interface IInternalUserService {
-  /** 사용자 생성 */
+  /**
+   * 사용자 생성
+   * @throws {ConflictException} [USER00001] 이미 사용중인 이메일
+   * @throws {InternalServerErrorException} [USER00002] 사용자 생성 실패
+   */
   create(user: CreateUserOptions): Promise<CreateUserResult>;
 
-  /** 사용자 로그인 */
+  /**
+   * 사용자 로그인
+   * @throws {UnauthorizedException} [USER00003] 이메일 또는 비밀번호가 올바르지 않습니다.
+   */
   login(user: LoginUserOptions): Promise<LoginUserResult>;
 }
 
