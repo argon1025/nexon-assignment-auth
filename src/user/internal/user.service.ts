@@ -1,14 +1,25 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { UserRepository } from '../repository/user.repository';
-import { IInternalUserService, CreateUserOptions, CreateUserResult } from './interface/user-service.interface';
+import {
+  IInternalUserService,
+  CreateUserOptions,
+  CreateUserResult,
+  LoginUserOptions,
+  LoginUserResult,
+} from './interface/user-service.interface';
 import { UserRole } from '../../common/enum/common.enum';
 import { ERROR_CODE } from '../../common/exception/error-code';
+import { AccessTokenPayload } from '../../common/interface/common.interface';
 
 @Injectable()
 export class InternalUserService implements IInternalUserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   /**
    * 사용자 생성
@@ -29,5 +40,33 @@ export class InternalUserService implements IInternalUserService {
     const { id } = await this.userRepository.create({ ...user, password: hashedPassword, role: UserRole.USER });
 
     return { id };
+  }
+
+  /**
+   * 사용자 로그인
+   * @throws {UnauthorizedException} [USER00003] 이메일 또는 비밀번호가 올바르지 않습니다.
+   */
+  async login(user: LoginUserOptions): Promise<LoginUserResult> {
+    // 사용자 조회
+    const existingUser = await this.userRepository.findByEmail(user.email);
+    if (!existingUser) {
+      throw new UnauthorizedException(ERROR_CODE.INVALID_CREDENTIALS);
+    }
+
+    // 비밀번호 검증
+    const isPasswordValid = await bcrypt.compare(user.password, existingUser.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException(ERROR_CODE.INVALID_CREDENTIALS);
+    }
+
+    // 액세스 토큰 발행
+    const payload: AccessTokenPayload = {
+      id: existingUser.id,
+      role: existingUser.role,
+      email: existingUser.email,
+    };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 }

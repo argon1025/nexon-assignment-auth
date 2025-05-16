@@ -10,4 +10,7 @@ export const ERROR_CODE: Record<string, ErrorDetail> = {
   /** 사용자 생성 */
   DUPLICATE_EMAIL: { name: 'USER00001', message: '이미 사용중인 이메일입니다.' },
   USER_CREATE_FAILED: { name: 'USER00002', message: '사용자 생성 실패' },
+
+  /** 사용자 로그인 */
+  INVALID_CREDENTIALS: { name: 'USER00003', message: '이메일 또는 비밀번호가 올바르지 않습니다.' },
 };
