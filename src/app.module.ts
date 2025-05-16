@@ -13,11 +13,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Request } from 'express';
 import { ClsModule } from 'nestjs-cls';
 
-import { AuthModule } from './auth/auth.module';
 import { AllExceptionsFilter } from './common/exception/all-exception.filter';
 import { ERROR_CODE } from './common/exception/error-code';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { HealthController } from './health/health.controller';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -52,7 +52,7 @@ import { HealthController } from './health/health.controller';
       },
       inject: [ConfigService],
     }),
-    AuthModule,
+    UserModule,
   ],
   controllers: [HealthController],
   providers: [
