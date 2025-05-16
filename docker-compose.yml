@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  auth:
+    container_name: nexon-auth-service
+    build:
+      context: .
+    ports:
+      - '8080:8080'
+    depends_on:
+      - auth-mongo
+    networks:
+      - nexon-network
+  auth-mongo:
+    container_name: auth-mongo-db
+    image: mongo:6.0
+    ports:
+      - '27017:27017'
+    volumes:
+      - auth-mongo-data:/data/db
+    networks:
+      - nexon-network
+volumes:
+  auth-mongo-data:
+networks:
+  nexon-network:
