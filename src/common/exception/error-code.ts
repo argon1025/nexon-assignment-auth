@@ -13,4 +13,7 @@ export const ERROR_CODE: Record<string, ErrorDetail> = {
 
   /** 사용자 로그인 */
   INVALID_CREDENTIALS: { name: 'USER00003', message: '이메일 또는 비밀번호가 올바르지 않습니다.' },
+
+  /** 사용자 조회 */
+  USER_NOT_FOUND: { name: 'USER00004', message: '사용자를 찾을 수 없습니다.' },
 };

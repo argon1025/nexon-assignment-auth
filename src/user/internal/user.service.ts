@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -9,6 +9,7 @@ import {
   CreateUserResult,
   LoginUserOptions,
   LoginUserResult,
+  FindByIdResult,
 } from './interface/user-service.interface';
 import { UserRole } from '../../common/enum/common.enum';
 import { ERROR_CODE } from '../../common/exception/error-code';
@@ -68,5 +69,18 @@ export class InternalUserService implements IInternalUserService {
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
+  }
+
+  /**
+   * 사용자 조회
+   * @throws {NotFoundException} [USER00004] 사용자를 찾을 수 없습니다.
+   */
+  async findById(id: string): Promise<FindByIdResult> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(ERROR_CODE.USER_NOT_FOUND);
+    }
+
+    return user;
   }
 }

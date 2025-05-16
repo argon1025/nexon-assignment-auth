@@ -1,3 +1,5 @@
+import { UserRole } from '../../../common/enum/common.enum';
+
 export interface IInternalUserService {
   /**
    * 사용자 생성
@@ -11,6 +13,12 @@ export interface IInternalUserService {
    * @throws {UnauthorizedException} [USER00003] 이메일 또는 비밀번호가 올바르지 않습니다.
    */
   login(user: LoginUserOptions): Promise<LoginUserResult>;
+
+  /**
+   * 사용자 조회
+   * @throws {NotFoundException} [USER00004] 사용자를 찾을 수 없습니다.
+   */
+  findById(id: string): Promise<FindByIdResult>;
 }
 
 /** 사용자 생성 정보 */
@@ -41,4 +49,18 @@ export interface LoginUserOptions {
 export interface LoginUserResult {
   /** 액세스 토큰 */
   accessToken: string;
+}
+
+/** 사용자 조회 결과 */
+export interface FindByIdResult {
+  /** 사용자 아이디 */
+  id: string;
+  /** 이메일 */
+  email: string;
+  /** 이름 */
+  name: string;
+  /** 역할 */
+  role: UserRole;
+  /** 생성일 */
+  createdAt: Date;
 }
