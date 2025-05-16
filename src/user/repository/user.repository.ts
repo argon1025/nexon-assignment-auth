@@ -1,8 +1,14 @@
 import { ConflictException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 
-import { CreateUserOptions, CreateUserResult, FindByEmailResult, IUserRepository } from './user.repository.interface';
+import {
+  CreateUserOptions,
+  CreateUserResult,
+  FindByEmailResult,
+  FindByIdResult,
+  IUserRepository,
+} from './user.repository.interface';
 import { ERROR_CODE } from '../../common/exception/error-code';
 import { User, UserDocument } from '../../schema/user.schema';
 
@@ -23,6 +29,22 @@ export class UserRepository implements IUserRepository {
       password: user.password,
       name: user.name,
       role: user.role,
+    };
+  }
+
+  async findById(id: string): Promise<FindByIdResult | null> {
+    // 유효하지 않은 아이디인 경우 null 반환
+    if (!isValidObjectId(id)) return null;
+
+    const user = await this.userModel.findById(id);
+    if (!user) return null;
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      createdAt: user.createdAt,
     };
   }
 
