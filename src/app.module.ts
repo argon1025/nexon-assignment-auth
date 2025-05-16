@@ -7,11 +7,13 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { MongooseModule } from '@nestjs/mongoose';
 import { Request } from 'express';
 import { ClsModule } from 'nestjs-cls';
 
+import { AuthModule } from './auth/auth.module';
 import { AllExceptionsFilter } from './common/exception/all-exception.filter';
 import { ERROR_CODE } from './common/exception/error-code';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
@@ -38,6 +40,19 @@ import { HealthController } from './health/health.controller';
         },
       },
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService.getOrThrow('DB_HOST');
+        const dbName = configService.getOrThrow('DB_NAME');
+        const port = configService.getOrThrow('DB_PORT');
+        return {
+          uri: `mongodb://${uri}:${port}/${dbName}`,
+        };
+      },
+      inject: [ConfigService],
+    }),
+    AuthModule,
   ],
   controllers: [HealthController],
   providers: [
