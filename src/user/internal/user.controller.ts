@@ -5,10 +5,12 @@ import {
   ApiInternalServerErrorResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
 import { CreateUserReq, CreateUserRes } from './dto/create-user.dto';
+import { LoginUserReq, LoginUserRes } from './dto/login-user.dto';
 import { InternalUserService } from './user.service';
 import { ErrorResponse } from '../../common/dto/error-response.dto';
 
@@ -24,5 +26,14 @@ export class InternalUserController {
   @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
   async create(@Body() createUserReq: CreateUserReq): Promise<CreateUserRes> {
     return plainToInstance(CreateUserRes, await this.internalUserService.create(createUserReq));
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: '사용자 로그인' })
+  @ApiBadRequestResponse({ description: '파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
+  @ApiUnauthorizedResponse({ description: '이메일 또는 비밀번호가 올바르지 않습니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  async login(@Body() loginUserReq: LoginUserReq): Promise<LoginUserRes> {
+    return plainToInstance(LoginUserRes, await this.internalUserService.login(loginUserReq));
   }
 }
