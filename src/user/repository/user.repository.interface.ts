@@ -16,6 +16,13 @@ export interface IUserRepository {
    * @throws {InternalServerErrorException} [USER00002] 사용자 생성 실패
    */
   create(user: CreateUserOptions): Promise<CreateUserResult>;
+
+  /**
+   * 사용자 수정
+   * @throws {NotFoundException} [USER00004] 사용자를 찾을 수 없습니다.
+   * @throws {InternalServerErrorException} [USER00004] 사용자 수정 실패
+   */
+  update(id: string, user: UpdateUserOptions): Promise<UpdateUserResult>;
 }
 
 /** 이메일로 사용자 검색 결과 */
@@ -61,5 +68,19 @@ export interface CreateUserOptions {
 /** 사용자 생성 결과 */
 export interface CreateUserResult {
   /** 사용자 아이디 */
+  id: string;
+}
+
+/** 사용자 수정 정보 */
+export interface UpdateUserOptions {
+  /** 이름 */
+  name?: string;
+  /** 역할 */
+  role?: UserRole;
+}
+
+/** 사용자 수정 결과 */
+export interface UpdateUserResult {
+  /** 수정된 사용자 아이디 */
   id: string;
 }

@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { User, UserSchema } from '../schema/user.schema';
+import { AdminUserController } from './admin/user.controller';
+import { AdminUserService } from './admin/user.service';
 import { InternalUserController } from './internal/user.controller';
 import { InternalUserService } from './internal/user.service';
 import { UserRepository } from './repository/user.repository';
@@ -19,7 +21,7 @@ import { UserRepository } from './repository/user.repository';
       inject: [ConfigService],
     }),
   ],
-  controllers: [InternalUserController],
-  providers: [UserRepository, InternalUserService],
+  controllers: [InternalUserController, AdminUserController],
+  providers: [UserRepository, InternalUserService, AdminUserService],
 })
 export class UserModule {}
