@@ -45,6 +45,8 @@ export class InternalUserService implements IInternalUserService {
 
   /**
    * 사용자 로그인
+   * TODO: 리프레시 토큰 발행 필요
+   *
    * @throws {UnauthorizedException} [USER00003] 이메일 또는 비밀번호가 올바르지 않습니다.
    */
   async login(user: LoginUserOptions): Promise<LoginUserResult> {
