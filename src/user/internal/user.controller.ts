@@ -4,7 +4,6 @@ import {
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
@@ -25,18 +24,18 @@ export class InternalUserController {
 
   @Post()
   @ApiOperation({ summary: '사용자 생성' })
-  @ApiBadRequestResponse({ description: '파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
-  @ApiConflictResponse({ description: '이미 사용중인 이메일입니다.', type: ErrorResponse })
-  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  @ApiBadRequestResponse({ description: '[USER10002] 파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
+  @ApiConflictResponse({ description: '[USER00001] 이미 사용중인 이메일입니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '[USER10001]서버 오류', type: ErrorResponse })
   async create(@Body() createUserReq: CreateUserReq): Promise<CreateUserRes> {
     return plainToInstance(CreateUserRes, await this.internalUserService.create(createUserReq));
   }
 
   @Post('login')
   @ApiOperation({ summary: '사용자 로그인' })
-  @ApiBadRequestResponse({ description: '파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
-  @ApiUnauthorizedResponse({ description: '이메일 또는 비밀번호가 올바르지 않습니다.', type: ErrorResponse })
-  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  @ApiBadRequestResponse({ description: '[USER10002] 파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
+  @ApiUnauthorizedResponse({ description: '[USER00003] 아이디가 올바르지 않습니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '[USER10001] 서버 오류', type: ErrorResponse })
   async login(@Body() loginUserReq: LoginUserReq): Promise<LoginUserRes> {
     return plainToInstance(LoginUserRes, await this.internalUserService.login(loginUserReq));
   }
@@ -44,8 +43,8 @@ export class InternalUserController {
   @Get(':id')
   @ApiOperation({ summary: '사용자 정보 조회' })
   @ApiParam({ name: 'id', description: '사용자 아이디', example: '68275fede4fdf52e54db13de' })
-  @ApiNotFoundResponse({ description: '사용자를 찾을 수 없습니다.', type: ErrorResponse })
-  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  @ApiNotFoundResponse({ description: '[USER00004] 사용자를 찾을 수 없습니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '[USER10001] 서버 오류', type: ErrorResponse })
   async findById(@Param('id') id: string): Promise<GetUserByIdRes> {
     return plainToInstance(GetUserByIdRes, await this.internalUserService.findById(id));
   }

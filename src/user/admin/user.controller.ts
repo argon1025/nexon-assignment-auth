@@ -20,10 +20,10 @@ export class AdminUserController {
 
   @Patch(':id')
   @ApiOperation({ summary: '사용자 수정' })
-  @ApiBadRequestResponse({ description: '파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
   @ApiParam({ name: 'id', description: '사용자 아이디' })
-  @ApiNotFoundResponse({ description: '사용자를 찾을 수 없습니다.', type: ErrorResponse })
-  @ApiInternalServerErrorResponse({ description: '서버 오류', type: ErrorResponse })
+  @ApiBadRequestResponse({ description: '[USER10002] 파라미터 누락 또는 유효하지 않음', type: ErrorResponse })
+  @ApiNotFoundResponse({ description: '[USER00004] 사용자를 찾을 수 없습니다.', type: ErrorResponse })
+  @ApiInternalServerErrorResponse({ description: '[USER10001] 서버 오류', type: ErrorResponse })
   async update(@Param('id') id: string, @Body() updateUserAdminReq: UpdateUserAdminReq): Promise<UpdateUserAdminRes> {
     return plainToInstance(UpdateUserAdminRes, await this.adminUserService.update(id, updateUserAdminReq));
   }
